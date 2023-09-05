@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"io/ioutil"
 	"log"
 	"strconv"
@@ -29,7 +28,7 @@ func main() {
 		"cubicsearch",
 	}
 
-	headers := []string{"Busca Linear v1", "Busca Linear v2", "Busca Binária (primeiro)", "Busca Binária (meio)", "Busca Quadrática", "Busca Cúbica"}
+	headers := []string{"Busca Linear v1", "Busca Linear v2", "Busca Binaria (primeiro)", "Busca Binaria (meio)", "Busca Quadratica", "Busca Cubica"}
 	data := make(map[string]DataGraph)
 
 	for _, algorithm := range algorithms {
@@ -56,11 +55,7 @@ func main() {
 			size := items[len(items)-1]
 			time := items[1]
 			memoryString := items[2]
-			memory, _ := strconv.ParseFloat(strings.Split(memoryString, " ")[1], 64)
-
-			fmt.Println("size", size)
-			fmt.Println("time", time)
-			fmt.Println("memory", memory)
+			memory, _ := strconv.ParseFloat(strings.Split(memoryString, " ")[0], 64)
 
 			if _, ok := data[size]; !ok {
 				data[size] = DataGraph{
@@ -79,26 +74,33 @@ func main() {
 	}
 
 	for size, item := range data {
-		p := plot.New()
+		// ptime := plot.New()
+		pmemory := plot.New()
 
-		p.Title.Text = "Comparação de Desempenho para Tamanho de Entrada" + size
-		p.X.Label.Text = "Algoritmo"
-		p.Y.Label.Text = "Tempo Médio (µs)"
+		// ptime.Title.Text = "Comparação de Desempenho para Tamanho de Entrada " + size
+		// ptime.X.Label.Text = "Algoritmo"
+		// ptime.Y.Label.Text = "Tempo Médio (µs)"
+
+		pmemory.Title.Text = "Comparacao de Desempenho para Tamanho de Entrada" + size
+		pmemory.X.Label.Text = "Algoritmo"
+		pmemory.Y.Label.Text = "Memoria media (bytes)"
 
 		bars, err := plotter.NewBarChart(plotter.Values(item.memories), vg.Points(40))
+
 		if err != nil {
 			log.Fatal(err)
 		}
+
 		bars.LineStyle.Width = vg.Length(0)
-		bars.Color = plotutil.Color(0)
+		bars.Color = plotutil.Color(2)
 
-		p.Add(bars)
+		pmemory.Add(bars)
 
-		p.NominalX(headers...)
+		pmemory.NominalX(headers...)
 
-		filename := "results/graphics/" + "performance_comparison" + size + ".pdf"
+		filenameForMemory := "results/graphics/" + "performance_comparison_memory_" + size + ".pdf"
 
-		if err := p.Save(8*vg.Inch, 4*vg.Inch, filename); err != nil {
+		if err := pmemory.Save(8*vg.Inch, 4*vg.Inch, filenameForMemory); err != nil {
 			log.Fatal(err)
 		}
 	}
