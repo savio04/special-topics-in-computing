@@ -96,24 +96,25 @@ func main() {
 			result := utils.Runalgorithm(params)
 
 			resultByAlgorithm = append(resultByAlgorithm, result)
+
+			/*Save result for each algorithm*/
+			filename := "results/performance" + algorithmname + ".csv"
+			data := make([][]string, 0)
+
+			//header
+			data = append(data, []string{"Algoritmo", "Tempo medio", "Memoria media", "Tamanho da entrada"})
+
+			for _, eachresult := range resultByAlgorithm {
+				data = append(data, []string{
+					mapAlgorithms[eachresult.Algorithm],
+					eachresult.Averagerunningtime.String(),
+					strconv.FormatUint(eachresult.AvaragememoryUsed, 10) + " bytes",
+					strconv.Itoa(eachresult.Casesize),
+				})
+			}
+
+			utils.WriteCSV(filename, data)
 		}
 
-		/*Save result for each algorithm*/
-		filename := "results/" + algorithmname + ".csv"
-		data := make([][]string, 0)
-
-		//header
-		data = append(data, []string{"Algoritmo", "Tempo medio", "Memoria media", "Tamanho da entrada"})
-
-		for _, eachresult := range resultByAlgorithm {
-			data = append(data, []string{
-				mapAlgorithms[eachresult.Algorithm],
-				eachresult.Averagerunningtime.String(),
-				strconv.FormatUint(eachresult.AvaragememoryUsed, 10) + " bytes",
-				strconv.Itoa(eachresult.Casesize),
-			})
-		}
-
-		utils.WriteCSV(filename, data)
 	}
 }
