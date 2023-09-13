@@ -1,0 +1,6 @@
+go 1.20
+
+use (
+	./find-greater-value/src
+	./search-algorithms/src
+)

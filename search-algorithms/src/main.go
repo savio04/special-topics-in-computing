@@ -98,7 +98,7 @@ func main() {
 			resultByAlgorithm = append(resultByAlgorithm, result)
 
 			/*Save result for each algorithm*/
-			filename := "results/performance" + algorithmname + ".csv"
+			filename := "results/performance/" + algorithmname + ".csv"
 			data := make([][]string, 0)
 
 			//header
